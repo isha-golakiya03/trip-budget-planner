@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>TripBudget - Day Wise Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .navbar {
+            background: #0f172a;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 950px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .header h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #64748b;
+        }
+        .day {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 22px;
+            padding: 28px;
+            box-shadow: 0 7px 25px rgba(0,0,0,0.06);
+        }
+        .day-title {
+            color: #2563eb;
+            font-size: 25px;
+            margin-bottom: 22px;
+            font-weight: bold;
+        }
+        .activity {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .activity:last-child {
+            border-bottom: none;
+        }
+        .time {
+            font-weight: bold;
+            color: #475569;
+        }
+        .activity-text {
+            color: #334155;
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+        .secondary {
+            border: 2px solid #2563eb;
+            color: #2563eb;
+            background: white;
+        }
+        @media (max-width: 650px) {
+            .activity {
+                grid-template-columns: 1fr;
+                gap: 7px;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            ✈ TripBudget
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('destination') }}">
+                Destination
+            </a>
+            <a href="{{ url_for('agent') }}">
+                Agent
+            </a>
+            <a href="{{ url_for('planner') }}">
+                Planner
+            </a>
+            <a href="{{ url_for('analysis') }}">
+                Analysis
+            </a>
+            <a href="{{ url_for('daywise') }}">
+                Day Plan
+            </a>
+            <a href="{{ url_for('summary') }}">
+                Summary
+            </a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>
+                Day-wise Travel Plan
+            </h1>
+            <p>
+                Your {{ destination }} itinerary
+            </p>
+        </div>
+        {% for plan in plans %}
+        <div class="day">
+            <div class="day-title">
+                Day {{ plan.day }}
+            </div>
+            <div class="activity">
+                <div class="time">
+                    🌅 Morning
+                </div>
+                <div class="activity-text">
+                    {{ plan.morning }}
+                </div>
+            </div>
+            <div class="activity">
+                <div class="time">
+                    ☀️ Afternoon
+                </div>
+                <div class="activity-text">
+                    {{ plan.afternoon }}
+                </div>
+            </div>
+            <div class="activity">
+                <div class="time">
+                    🌙 Evening
+                </div>
+                <div class="activity-text">
+                    {{ plan.evening }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="buttons">
+            <a
+                href="{{ url_for('analysis') }}"
+                class="btn secondary">
+                ← Budget Analysis
+            </a>
+            <a
+                href="{{ url_for('summary') }}"
+                class="btn primary">
+                Final Summary →
+            </a>
+        </div>
+    </div>
+</body>
+</html>

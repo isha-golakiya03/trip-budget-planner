@@ -1,0 +1,343 @@
+from flask import Flask, render_template, request, redirect, url_for
+import plotly.graph_objects as go
+import plotly.express as px
+
+app = Flask(__name__)
+# Store trip information
+trip_data = {}
+# =========================================================
+# HOME
+# =========================================================
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+# =========================================================
+# DESTINATION
+# =========================================================
+
+@app.route("/destination")
+def destination():
+    return render_template("destination.html")
+# =========================================================
+# AGENT
+# =========================================================
+@app.route("/agent")
+def agent():
+    return render_template("agent.html")
+# =========================================================
+# PLANNER
+# =========================================================
+@app.route("/planner/<destination>")
+def planner(destination):
+    return render_template(
+        "planner.html",
+        destination=destination
+    )
+# =========================================================
+# CALCULATE BUDGET
+# =========================================================
+@app.route("/calculate_budget", methods=["POST"])
+def calculate_budget():
+    global trip_data
+    destination = request.form.get("destination", "Unknown")
+    days = int(request.form.get("days", 1))
+    persons = int(request.form.get("persons", 1))
+    travel_type = request.form.get("travel_type", "Flight")
+    currency = request.form.get("currency", "INR")
+    travel = float(request.form.get("travel", 0))
+    hotel = float(request.form.get("hotel", 0))
+    food = float(request.form.get("food", 0))
+    transport = float(request.form.get("transport", 0))
+    activities = float(request.form.get("activities", 0))
+    other = float(request.form.get("other", 0))
+    total_budget = (
+        travel
+        + hotel
+        + food
+        + transport
+        + activities
+        + other
+    )
+    daily_budget = total_budget / days
+    per_person = total_budget / persons
+    trip_data = {
+        "destination": destination,
+        "days": days,
+        "persons": persons,
+        "travel_type": travel_type,
+        "currency": currency,
+        "travel": travel,
+        "hotel": hotel,
+        "food": food,
+        "transport": transport,
+        "activities": activities,
+        "other": other,
+        "total_budget": total_budget,
+        "daily_budget": daily_budget,
+        "per_person": per_person
+    }
+    return redirect(url_for("analysis"))
+# =========================================================
+# ANALYSIS
+# =========================================================
+@app.route("/analysis")
+def analysis():
+    if not trip_data:
+        return redirect(url_for("destination"))
+    destination_name = trip_data["destination"]
+    total_budget = trip_data["total_budget"]
+    daily_budget = trip_data["daily_budget"]
+    per_person = trip_data["per_person"]
+    currency = trip_data["currency"]
+    categories = [
+        "Travel",
+        "Hotel",
+        "Food",
+        "Transport",
+        "Activities",
+        "Other"
+    ]
+    values = [
+        trip_data["travel"],
+        trip_data["hotel"],
+        trip_data["food"],
+        trip_data["transport"],
+        trip_data["activities"],
+        trip_data["other"]
+    ]
+    # PIE CHART
+    pie = go.Figure(
+        data=[
+            go.Pie(
+                labels=categories,
+                values=values,
+                hole=0.35
+            )
+        ]
+    )
+    pie.update_layout(
+        title="Budget Distribution",
+        height=400
+    )
+    pie_chart = pie.to_html(
+        full_html=False,
+        include_plotlyjs="cdn"
+    )
+    # BAR CHART
+    bar = go.Figure(
+        data=[
+            go.Bar(
+                x=categories,
+                y=values,
+                text=[
+                    f"{currency} {value:,.0f}"
+                    for value in values
+                ],
+                textposition="auto"
+            )
+        ]
+    )
+    bar.update_layout(
+        title="Expense Comparison",
+        xaxis_title="Category",
+        yaxis_title="Amount",
+        height=400
+    )
+    bar_chart = bar.to_html(
+        full_html=False,
+        include_plotlyjs=False
+    )
+    # DESTINATION CHART
+    location = go.Figure(
+        data=[
+            go.Bar(
+                x=[destination_name],
+                y=[total_budget],
+                text=[
+                    f"{currency} {total_budget:,.0f}"
+                ],
+                textposition="auto"
+            )
+        ]
+    )
+    location.update_layout(
+        title="Destination Budget",
+        xaxis_title="Destination",
+        yaxis_title="Total Budget",
+        height=400
+    )
+    location_chart = location.to_html(
+        full_html=False,
+        include_plotlyjs=False
+    )
+    return render_template(
+        "analysis.html",
+        destination=destination_name,
+        total_budget=f"{total_budget:,.2f}",
+        daily_budget=f"{daily_budget:,.2f}",
+        per_person=f"{per_person:,.2f}",
+        currency=currency,
+        pie_chart=pie_chart,
+        bar_chart=bar_chart,
+        location_chart=location_chart
+    )
+# =========================================================
+# DAY-WISE
+# =========================================================
+@app.route("/daywise")
+def daywise():
+    if not trip_data:
+        return redirect(url_for("destination"))
+    destination_name = trip_data["destination"]
+    days = trip_data["days"]
+    persons = trip_data["persons"]
+    currency = trip_data["currency"]
+    travel = trip_data["travel"]
+    hotel = trip_data["hotel"]
+    food = trip_data["food"]
+    transport = trip_data["transport"]
+    activities = trip_data["activities"]
+    daily_travel = travel / days
+    daily_hotel = hotel / days
+    daily_food = food / days
+    daily_transport = transport / days
+    daily_activities = activities / days
+    daywise_data = []
+    for day_number in range(1, days + 1):
+        day_total = (
+            daily_travel
+            + daily_hotel
+            + daily_food
+            + daily_transport
+            + daily_activities
+        )
+        day_data = {
+            "day": day_number,
+            "travel": round(daily_travel, 2),
+            "hotel": round(daily_hotel, 2),
+            "food": round(daily_food, 2),
+            "transport": round(daily_transport, 2),
+            "activities": round(daily_activities, 2),
+            "total": round(day_total, 2)
+        }
+        daywise_data.append(day_data)
+    # DAY CHART
+    day_numbers = [
+        f"Day {i}"
+        for i in range(1, days + 1)
+    ]
+    day_totals = [
+        day["total"]
+        for day in daywise_data
+    ]
+    chart = go.Figure(
+        data=[
+            go.Bar(
+                x=day_numbers,
+                y=day_totals,
+                text=[
+                    f"{currency} {value:,.0f}"
+                    for value in day_totals
+                ],
+                textposition="auto"
+            )
+        ]
+    )
+    chart.update_layout(
+        title="Day-wise Expense",
+        xaxis_title="Day",
+        yaxis_title="Amount",
+        height=450
+    )
+    day_chart = chart.to_html(
+        full_html=False,
+        include_plotlyjs="cdn"
+    )
+    return render_template(
+        "daywise.html",
+        destination=destination_name,
+        days=days,
+        persons=persons,
+        currency=currency,
+        daywise_data=daywise_data,
+        day_chart=day_chart
+    )
+# =========================================================
+# SUMMARY
+# =========================================================
+@app.route("/summary")
+def summary():
+    if not trip_data:
+        return redirect(url_for("destination"))
+    destination_name = trip_data["destination"]
+    days = trip_data["days"]
+    persons = trip_data["persons"]
+    travel_type = trip_data["travel_type"]
+    currency = trip_data["currency"]
+    travel = trip_data["travel"]
+    hotel = trip_data["hotel"]
+    food = trip_data["food"]
+    transport = trip_data["transport"]
+    activities = trip_data["activities"]
+    other = trip_data["other"]
+    total_budget = trip_data["total_budget"]
+    daily_budget = trip_data["daily_budget"]
+    per_person = trip_data["per_person"]
+    categories = [
+        "Travel",
+        "Hotel",
+        "Food",
+        "Transport",
+        "Activities",
+        "Other"
+    ]
+    values = [
+        travel,
+        hotel,
+        food,
+        transport,
+        activities,
+        other
+    ]
+    chart = px.bar(
+        x=categories,
+        y=values,
+        labels={
+            "x": "Expense Category",
+            "y": "Amount"
+        },
+        title="Trip Budget Overview"
+    )
+    chart.update_layout(
+        height=400
+    )
+    summary_chart = chart.to_html(
+        full_html=False,
+        include_plotlyjs="cdn"
+    )
+    return render_template(
+        "summary.html",
+        destination=destination_name,
+        days=days,
+        persons=persons,
+        travel_type=travel_type,
+        currency=currency,
+        travel=travel,
+        hotel=hotel,
+        food=food,
+        transport=transport,
+        activities=activities,
+        other=other,
+        total_budget=f"{total_budget:,.2f}",
+        daily_budget=f"{daily_budget:,.2f}",
+        per_person=f"{per_person:,.2f}",
+        summary_chart=summary_chart
+    )
+# =========================================================
+# RUN APPLICATION
+# =========================================================
+if __name__ == "__main__":
+    app.run(debug=True)

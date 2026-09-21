@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>TripBudget - Destinations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            min-height: 100vh;
+        }
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: #0f172a;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+        /* ================= CONTAINER ================= */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+        .header p {
+            color: #64748b;
+            font-size: 17px;
+        }
+        /* ================= SECTION TITLE ================= */
+        .section-title {
+            font-size: 30px;
+            margin: 40px 0 22px;
+            color: #1e3a8a;
+        }
+        /* ================= GRID ================= */
+        .destination-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+        /* ================= CARD ================= */
+        .destination-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+        .destination-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+        }
+        .destination-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            display: block;
+        }
+        .card-content {
+            padding: 18px;
+        }
+        .card-content h3 {
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+        .budget {
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        /* ================= BUTTON ================= */
+        .select-btn {
+            width: 100%;
+            padding: 11px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .select-btn:hover {
+            background: #1d4ed8;
+        }
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1000px) {
+            .destination-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 750px) {
+            .destination-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+        @media (max-width: 500px) {
+            .destination-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 32px;
+            }
+            .section-title {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+<nav class="navbar">
+    <div class="logo">
+        ✈ TripBudget
+    </div>
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}">
+            Home
+        </a>
+        <a href="{{ url_for('destination') }}">
+            Destination
+        </a>
+        <a href="{{ url_for('agent') }}">
+            Agent
+        </a>
+        <a href="{{ url_for('planner') }}">
+            Planner
+        </a>
+        <a href="{{ url_for('analysis') }}">
+            Analysis
+        </a>
+        <a href="{{ url_for('daywise') }}">
+            Day Plan
+        </a>
+        <a href="{{ url_for('summary') }}">
+            Summary
+        </a>
+    </div>
+</nav>
+<!-- =====================================================
+     MAIN
+===================================================== -->
+<div class="container">
+    <div class="header">
+        <h1>
+            Explore Your Destination 🌍
+        </h1>
+        <p>
+            Choose from our national and international
+            destinations and start planning your trip.
+        </p>
+    </div>
+    <!-- =================================================
+         NATIONAL
+    ================================================== -->
+    <h2 class="section-title">
+        🇮🇳 National Destinations
+    </h2>
+    <div class="destination-grid">
+        <!-- 1 GOA -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80"
+                alt="Goa">
+            <div class="card-content">
+                <h3>Goa</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹8,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Goa">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Goa
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 2 MANALI -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80"
+                alt="Manali">
+            <div class="card-content">
+                <h3>Manali</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹9,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Manali">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Manali
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 3 JAIPUR -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80"
+                alt="Jaipur">
+            <div class="card-content">
+                <h3>Jaipur</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹7,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Jaipur">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Jaipur
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 4 KERALA -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80"
+                alt="Kerala">
+            <div class="card-content">
+                <h3>Kerala</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹10,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Kerala">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Kerala
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 5 MUMBAI -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=80"
+                alt="Mumbai">
+            <div class="card-content">
+                <h3>Mumbai</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹7,500 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Mumbai">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Mumbai
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 6 UDAIPUR -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1602643163983-ed0babc39797?auto=format&fit=crop&w=800&q=80"
+                alt="Udaipur">
+            <div class="card-content">
+                <h3>Udaipur</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹7,500 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Udaipur">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Udaipur
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 7 DELHI -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80"
+                alt="Delhi">
+            <div class="card-content">
+                <h3>Delhi</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹6,500 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Delhi">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Delhi
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- =================================================
+         INTERNATIONAL
+    ================================================== -->
+    <h2 class="section-title">
+        🌎 International Destinations
+    </h2>
+    <div class="destination-grid">
+        <!-- 1 DUBAI -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=800&q=80"
+                alt="Dubai">
+            <div class="card-content">
+                <h3>Dubai</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹45,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Dubai">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Dubai
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 2 PARIS -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80"
+                alt="Paris">
+            <div class="card-content">
+                <h3>Paris</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹90,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Paris">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Paris
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 3 LONDON -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80"
+                alt="London">
+            <div class="card-content">
+                <h3>London</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹95,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="London">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select London
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 4 SINGAPORE -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=800&q=80"
+                alt="Singapore">
+            <div class="card-content">
+                <h3>Singapore</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹45,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Singapore">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Singapore
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 5 THAILAND -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=80"
+                alt="Thailand">
+            <div class="card-content">
+                <h3>Thailand</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹35,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Thailand">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Thailand
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 6 BALI -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80"
+                alt="Bali">
+            <div class="card-content">
+                <h3>Bali</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹40,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Bali">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Bali
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 7 MALAYSIA -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=800&q=80"
+                alt="Malaysia">
+            <div class="card-content">
+                <h3>Malaysia</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹38,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Malaysia">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Malaysia
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 8 MALDIVES -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80"
+                alt="Maldives">
+            <div class="card-content">
+                <h3>Maldives</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹55,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Maldives">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Maldives
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 9 SWITZERLAND -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80"
+                alt="Switzerland">
+            <div class="card-content">
+                <h3>Switzerland</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹1,20,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Switzerland">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Switzerland
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 10 AUSTRALIA -->
+        <div class="destination-card">
+            <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUBpV-5hpnvxeTR9Ioaym9X0wojvG-A7UctQ8cXEFsaA&s=10"
+                alt="Australia">
+            <div class="card-content">
+                <h3>Australia</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹1,10,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Australia">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Australia
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 11 JAPAN -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=800&q=80"
+                alt="Japan">
+            <div class="card-content">
+                <h3>Japan</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹85,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Japan">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select Japan
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 12 ITALY -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=800&q=80"
+                alt="Italy">
+            <div class="card-content">
+                <h3>Italy</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹95,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="Italy">
+                    <button
+                        type="submit"
+                        class="select-btn">
+
+                        Select Italy
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- 13 NEW YORK -->
+        <div class="destination-card">
+            <img
+                src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=800&q=80"
+                alt="New York">
+            <div class="card-content">
+                <h3>New York</h3>
+                <p class="budget">
+                    Minimum Budget:
+                    ₹1,30,000 / person
+                </p>
+                <form method="POST">
+                    <input
+                        type="hidden"
+                        name="destination"
+                        value="New York">
+                    <button
+                        type="submit"
+                        class="select-btn">
+                        Select New York
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
